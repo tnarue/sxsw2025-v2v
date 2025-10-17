@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2V - Post Opportunity (Business Owner)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .screen-container {
+            width: 1440px;
+            height: 900px;
+            margin: 40px auto;
+            background: #0f1229;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1f3a 0%, #13172e 100%);
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 32px 24px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            padding-left: 12px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #ffffff;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #ffffff;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            padding: 32px 40px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 32px;
+        }
+        
+        .header-left {
+            flex: 1;
+        }
+        
+        .breadcrumb {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        
+        .breadcrumb span {
+            color: #00D4FF;
+            cursor: pointer;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .user-profile {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Business Summary Card */
+        .business-summary {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .business-info h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .business-meta {
+            display: flex;
+            gap: 24px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .business-score {
+            text-align: right;
+        }
+        
+        .score-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Identified Opportunities Section */
+        .opportunities-section {
+            margin-bottom: 32px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .section-subtitle {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-bottom: 24px;
+        }
+        
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .opportunity-card {
+            background: linear-gradient(135deg, rgba(15, 31, 46, 0.8) 0%, rgba(10, 22, 40, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .opportunity-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        .opportunity-card.selected {
+            border: 2px solid #6366f1;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+        }
+        
+        .opportunity-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .opportunity-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .opportunity-description {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .opportunity-match {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .selected-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        /* Post Form Section */
+        .post-form-section {
+            background: linear-gradient(135deg, rgba(15, 31, 46, 0.8) 0%, rgba(10, 22, 40, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 12px;
+            padding: 32px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+        
+        .form-input,
+        .form-select,
+        .form-textarea {
+            background: rgba(10, 22, 40, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #6b7280;
+        }
+        
+        .amount-input-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .amount-input-group .form-input {
+            flex: 1;
+        }
+        
+        .currency-prefix {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #6366f1;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Terms Section */
+        .terms-section {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .terms-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .terms-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .term-item {
+            display: flex;
+            gap: 8px;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        
+        .term-icon {
+            color: #00D4FF;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(99, 102, 241, 0.5);
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .checkbox-label {
+            font-size: 13px;
+            color: #d1d5db;
+            cursor: pointer;
+        }
+        
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            color: #ffffff;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+        
+        /* Info Banner */
+        .info-banner {
+            background: rgba(99, 102, 241, 0.1);
+            border-left: 3px solid #6366f1;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .info-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .info-text {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">V2</div>
+                <div class="logo-text">V2V</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Main</div>
+                <div class="nav-item">
+                    <div class="nav-icon">📊</div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📈</div>
+                    <span>My Analysis</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚖️</div>
+                    <span>Competitor Insights</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Opportunities</div>
+                <div class="nav-item active">
+                    <div class="nav-icon">🎯</div>
+                    <span>Post Opportunity</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">💼</div>
+                    <span>Active Posts</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">💬</div>
+                    <span>Investor Inquiries</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Account</div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">❓</div>
+                    <span>Help & Support</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <span>Dashboard</span> / <span>Opportunities</span> / Post Opportunity
+                    </div>
+                    <h1 class="page-title">Post Your Opportunity</h1>
+                    <p class="page-subtitle">Share your identified opportunities with potential investors and partners</p>
+                </div>
+                <div class="user-profile">JD</div>
+            </div>
+            
+            <!-- Business Summary -->
+            <div class="business-summary">
+                <div class="business-info">
+                    <h2>The Daily Grind Café</h2>
+                    <div class="business-meta">
+                        <span>☕ Coffee Shop • Hospitality</span>
+                        <span>📍 Surry Hills, NSW</span>
+                        <span>🕐 Last analyzed 2 days ago</span>
+                    </div>
+                </div>
+                <div class="business-score">
+                    <div class="score-label">Reputation Score</div>
+                    <div class="score-value">8.7</div>
+                </div>
+            </div>
+            
+            <!-- Info Banner -->
+            <div class="info-banner">
+                <div class="info-icon">💡</div>
+                <div class="info-content">
+                    <div class="info-title">AI-Identified Opportunities</div>
+                    <div class="info-text">Based on your business analysis, we've identified several growth opportunities. Select the one that best matches your current needs and goals.</div>
+                </div>
+            </div>
+            
+            <!-- Identified Opportunities -->
+            <div class="opportunities-section">
+                <div class="section-title">Select Your Opportunity Type</div>
+                <div class="section-subtitle">Choose the opportunity that aligns with your business goals</div>
+                
+                <div class="opportunities-grid">
+                    <div class="opportunity-card selected">
+                        <div class="selected-badge">✓</div>
+                        <div class="opportunity-icon">💰</div>
+                        <div class="opportunity-title">Expansion Loan</div>
+                        <div class="opportunity-description">
+                            Secure funding to open additional locations and scale your successful business model.
+                        </div>
+                        <div class="opportunity-match">95% Match</div>
+                    </div>
+                    
+                    <div class="opportunity-card">
+                        <div class="opportunity-icon">📊</div>
+                        <div class="opportunity-title">Equity Investment</div>
+                        <div class="opportunity-description">
+                            Partner with investors who can provide capital and strategic guidance for growth.
+                        </div>
+                        <div class="opportunity-match">88% Match</div>
+                    </div>
+                    
+                    <div class="opportunity-card">
+                        <div class="opportunity-icon">🔗</div>
+                        <div class="opportunity-title">Franchise Partnership</div>
+                        <div class="opportunity-description">
+                            Develop your brand into a franchise system and expand through partnerships.
+                        </div>
+                        <div class="opportunity-match">82% Match</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Post Form -->
+            <div class="post-form-section">
+                <div class="form-title">Opportunity Details</div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Opportunity Title *</label>
+                        <input type="text" class="form-input" placeholder="e.g., Expansion Loan for 2nd Location" value="Expansion Loan for Multi-Location Growth">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Funding Amount Sought *</label>
+                        <div class="amount-input-group">
+                            <div class="currency-prefix">$</div>
+                            <input type="text" class="form-input" placeholder="500,000" value="750,000">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Timeline *</label>
+                        <select class="form-select">
+                            <option>Immediate (0-3 months)</option>
+                            <option selected>Short-term (3-6 months)</option>
+                            <option>Medium-term (6-12 months)</option>
+                            <option>Long-term (12+ months)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Use of Funds *</label>
+                        <select class="form-select">
+                            <option selected>Location Expansion</option>
+                            <option>Equipment & Infrastructure</option>
+                            <option>Working Capital</option>
+                            <option>Marketing & Branding</option>
+                            <option>Staffing & Training</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">Opportunity Description *</label>
+                        <textarea class="form-textarea" placeholder="Describe your opportunity, growth plans, and what makes your business attractive to investors...">The Daily Grind Café has achieved exceptional customer satisfaction (8.7/10 reputation score, 92% positive sentiment) and is ready for strategic expansion. We're seeking $750K to open 2 additional locations in high-traffic Sydney areas. Our proven operational model, strong brand loyalty, and consistent profitability make this a low-risk, high-return opportunity.</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Expected ROI (Optional)</label>
+                        <input type="text" class="form-input" placeholder="e.g., 18-24% annually" value="20-25% annually">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Preferred Investor Type</label>
+                        <select class="form-select">
+                            <option>No Preference</option>
+                            <option selected>Traditional Lender</option>
+                            <option>Angel Investor</option>
+                            <option>Venture Capital</option>
+                            <option>Strategic Partner</option>
+                            <option>Franchise Investor</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Terms Section -->
+                <div class="terms-section">
+                    <div class="terms-title">What Investors Will See</div>
+                    <div class="terms-list">
+                        <div class="term-item">
+                            <span class="term-icon">✓</span>
+                            <span>Your business reputation analysis and scores</span>
+                        </div>
+                        <div class="term-item">
+                            <span class="term-icon">✓</span>
+                            <span>Opportunity details and funding requirements</span>
+                        </div>
+                        <div class="term-item">
+                            <span class="term-icon">✓</span>
+                            <span>Business location and industry category</span>
+                        </div>
+                        <div class="term-item">
+                            <span class="term-icon">✓</span>
+                            <span>Contact information (only shared after mutual interest)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" class="checkbox" id="terms" checked>
+                        <label class="checkbox-label" for="terms">
+                            I confirm that the information provided is accurate and I agree to V2V's terms of service and privacy policy. I understand that my business analysis and opportunity details will be visible to verified investors on the platform.
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button class="btn-secondary">Save as Draft</button>
+                    <button class="btn-primary">Post Opportunity →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2V - Investment Opportunity Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .screen-container {
+            width: 1440px;
+            height: 900px;
+            margin: 40px auto;
+            background: #0f1229;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1f3a 0%, #13172e 100%);
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 32px 24px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            padding-left: 12px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #ffffff;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #ffffff;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            padding: 32px 40px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 32px;
+        }
+        
+        .header-left {
+            flex: 1;
+        }
+        
+        .breadcrumb {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        
+        .breadcrumb span {
+            color: #6366f1;
+            cursor: pointer;
+        }
+        
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+        
+        .btn-icon:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+        
+        /* Summary Banner */
+        .summary-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.15) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .summary-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981 0%, #6366f1 100%);
+        }
+        
+        .banner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+        
+        .opportunity-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+        
+        .confidence-score {
+            text-align: right;
+        }
+        
+        .confidence-label {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        
+        .confidence-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #10b981;
+        }
+        
+        .summary-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .summary-description {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #d1d5db;
+        }
+        
+        /* Opportunity Cards */
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .opportunity-card {
+            background: linear-gradient(135deg, rgba(30, 35, 60, 0.8) 0%, rgba(20, 25, 45, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+            position: relative;
+        }
+        
+        .opportunity-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 16px 0 0 16px;
+        }
+        
+        .opportunity-header {
+            display: flex;
+            align-items: start;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .opportunity-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .opportunity-info {
+            flex: 1;
+        }
+        
+        .opportunity-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .opportunity-type {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .opportunity-description {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #d1d5db;
+            margin-bottom: 20px;
+        }
+        
+        .opportunity-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-item {
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .metric-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #6366f1;
+        }
+        
+        .opportunity-action {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-explore {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-explore:hover {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-color: transparent;
+        }
+        
+        /* Key Insights */
+        .insights-section {
+            margin-bottom: 32px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, rgba(30, 35, 60, 0.6) 0%, rgba(20, 25, 45, 0.6) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        
+        .insight-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+        
+        .insight-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .insight-description {
+            font-size: 13px;
+            color: #9ca3af;
+            line-height: 1.6;
+        }
+        
+        /* Risk Assessment */
+        .risk-section {
+            background: linear-gradient(135deg, rgba(30, 35, 60, 0.8) 0%, rgba(20, 25, 45, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 28px;
+        }
+        
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .risk-level {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .risk-level.medium {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .risk-factors {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .risk-item {
+            display: flex;
+            gap: 12px;
+            align-items: start;
+        }
+        
+        .risk-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        .risk-indicator.low {
+            background: #10b981;
+        }
+        
+        .risk-indicator.medium {
+            background: #f59e0b;
+        }
+        
+        .risk-content {
+            flex: 1;
+        }
+        
+        .risk-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .risk-description {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">V2</div>
+                <div class="logo-text">V2V</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Main</div>
+                <div class="nav-item">
+                    <div class="nav-icon">📊</div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🔍</div>
+                    <span>Discover Businesses</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Watchlist</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Analysis</div>
+                <div class="nav-item">
+                    <div class="nav-icon">📈</div>
+                    <span>All Analyses</span>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">🎯</div>
+                    <span>Opportunities</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚖️</div>
+                    <span>Comparisons</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Account</div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">❓</div>
+                    <span>Help & Support</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <div class="breadcrumb">
+                        <span>Dashboard</span> / <span>Analyses</span> / <span>The Daily Grind Café</span> / Opportunities
+                    </div>
+                    <h1 class="page-title">Investment Opportunities</h1>
+                    <p class="page-subtitle">AI-identified opportunities based on reputation analysis</p>
+                </div>
+                <div class="header-actions">
+                    <div class="btn-icon">📥</div>
+                    <div class="btn-icon">📤</div>
+                    <button class="btn-primary">Generate Report</button>
+                </div>
+            </div>
+            
+            <!-- Summary Banner -->
+            <div class="summary-banner">
+                <div class="banner-header">
+                    <div class="opportunity-badge">🎯 High Potential Expansion</div>
+                    <div class="confidence-score">
+                        <div class="confidence-label">Confidence Score</div>
+                        <div class="confidence-value">94%</div>
+                    </div>
+                </div>
+                <h2 class="summary-title">Prime Expansion Opportunity</h2>
+                <p class="summary-description">
+                    The Daily Grind Café demonstrates exceptional operational performance with a reputation score of 8.7/10 and 92% positive sentiment. 
+                    Strong brand loyalty, consistent quality, and high customer engagement indicate readiness for strategic expansion. The business shows 
+                    minimal operational weaknesses and maintains robust customer retention, making it an ideal candidate for franchise development or 
+                    additional location investment.
+                </p>
+            </div>
+            
+            <!-- Opportunity Cards -->
+            <div class="opportunities-grid">
+                <div class="opportunity-card">
+                    <div class="opportunity-header">
+                        <div class="opportunity-icon">🏢</div>
+                        <div class="opportunity-info">
+                            <div class="opportunity-title">Multi-Location Expansion</div>
+                            <div class="opportunity-type">Growth Capital • Equity Investment</div>
+                        </div>
+                    </div>
+                    <p class="opportunity-description">
+                        Strong brand recognition and operational excellence position this business for successful expansion into 2-3 additional 
+                        high-traffic locations within Sydney. Proven systems and customer loyalty reduce expansion risk.
+                    </p>
+                    <div class="opportunity-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Investment Range</div>
+                            <div class="metric-value">$500K-$1M</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Est. ROI</div>
+                            <div class="metric-value">18-24%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Timeline</div>
+                            <div class="metric-value">12-18 mo</div>
+                        </div>
+                    </div>
+                    <div class="opportunity-action">
+                        <button class="btn-explore">Explore Details →</button>
+                    </div>
+                </div>
+                
+                <div class="opportunity-card">
+                    <div class="opportunity-header">
+                        <div class="opportunity-icon">🔗</div>
+                        <div class="opportunity-info">
+                            <div class="opportunity-title">Franchise Development</div>
+                            <div class="opportunity-type">Licensing • Brand Expansion</div>
+                        </div>
+                    </div>
+                    <p class="opportunity-description">
+                        Exceptional customer satisfaction and replicable business model make this an ideal franchise opportunity. 
+                        Develop franchise systems and expand brand presence across metropolitan areas.
+                    </p>
+                    <div class="opportunity-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Investment Range</div>
+                            <div class="metric-value">$300K-$600K</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Est. ROI</div>
+                            <div class="metric-value">22-28%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Timeline</div>
+                            <div class="metric-value">18-24 mo</div>
+                        </div>
+                    </div>
+                    <div class="opportunity-action">
+                        <button class="btn-explore">Explore Details →</button>
+                    </div>
+                </div>
+                
+                <div class="opportunity-card">
+                    <div class="opportunity-header">
+                        <div class="opportunity-icon">⚡</div>
+                        <div class="opportunity-info">
+                            <div class="opportunity-title">Operational Optimization</div>
+                            <div class="opportunity-type">Advisory Services • Efficiency</div>
+                        </div>
+                    </div>
+                    <p class="opportunity-description">
+                        Address peak-hour wait times through workflow optimization and staffing adjustments. Small operational improvements 
+                        could increase capacity by 20-30% without major capital investment.
+                    </p>
+                    <div class="opportunity-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Investment Range</div>
+                            <div class="metric-value">$50K-$100K</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Est. ROI</div>
+                            <div class="metric-value">35-45%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Timeline</div>
+                            <div class="metric-value">3-6 mo</div>
+                        </div>
+                    </div>
+                    <div class="opportunity-action">
+                        <button class="btn-explore">Explore Details →</button>
+                    </div>
+                </div>
+                
+                <div class="opportunity-card">
+                    <div class="opportunity-header">
+                        <div class="opportunity-icon">🌐</div>
+                        <div class="opportunity-info">
+                            <div class="opportunity-title">Digital Product Line</div>
+                            <div class="opportunity-type">Brand Extension • E-commerce</div>
+                        </div>
+                    </div>
+                    <p class="opportunity-description">
+                        Leverage strong brand loyalty to launch retail coffee products, merchandise, or subscription services. 
+                        Customer reviews indicate high interest in take-home products.
+                    </p>
+                    <div class="opportunity-metrics">
+                        <div class="metric-item">
+                            <div class="metric-label">Investment Range</div>
+                            <div class="metric-value">$150K-$300K</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Est. ROI</div>
+                            <div class="metric-value">25-35%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Timeline</div>
+                            <div class="metric-value">6-12 mo</div>
+                        </div>
+                    </div>
+                    <div class="opportunity-action">
+                        <button class="btn-explore">Explore Details →</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Insights -->
+            <div class="insights-section">
+                <div class="section-title">Key Investment Insights</div>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-icon">💪</div>
+                        <div class="insight-title">Strong Market Position</div>
+                        <div class="insight-description">
+                            Consistently outperforms competitors in quality and service. Brand recognition provides competitive moat for expansion.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">📈</div>
+                        <div class="insight-title">Growth Trajectory</div>
+                        <div class="insight-description">
+                            5% quarter-over-quarter sentiment improvement indicates growing brand strength and customer satisfaction.
+                        </div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-icon">🎯</div>
+                        <div class="insight-title">Operational Excellence</div>
+                        <div class="insight-description">
+                            87% owner response rate demonstrates strong management engagement and commitment to customer experience.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Risk Assessment -->
+            <div class="risk-section">
+                <div class="risk-header">
+                    <div class="section-title">Risk Assessment</div>
+                    <div class="risk-level">Low Risk</div>
+                </div>
+                <div class="risk-factors">
+                    <div class="risk-item">
+                        <div class="risk-indicator low"></div>
+                        <div class="risk-content">
+                            <div class="risk-name">Market Risk: Low</div>
+                            <div class="risk-description">
+                                Strong customer loyalty and consistent positive sentiment reduce market volatility risk
+                            </div>
+                        </div>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-indicator low"></div>
+                        <div class="risk-content">
+                            <div class="risk-name">Operational Risk: Low</div>
+                            <div class="risk-description">
+                                Proven systems and high-quality standards minimize operational execution risk
+                            </div>
+                        </div>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-indicator medium"></div>
+                        <div class="risk-content">
+                            <div class="risk-name">Capacity Risk: Medium</div>
+                            <div class="risk-description">
+                                Current location experiences peak-hour constraints; expansion could alleviate but requires careful planning
+                            </div>
+                        </div>
+                    </div>
+                    <div class="risk-item">
+                        <div class="risk-indicator low"></div>
+                        <div class="risk-content">
+                            <div class="risk-name">Reputational Risk: Low</div>
+                            <div class="risk-description">
+                                Minimal negative feedback and strong crisis management capabilities protect brand reputation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

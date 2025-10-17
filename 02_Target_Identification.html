@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V2V - Discover Businesses (Target Identification)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+        
+        .screen-container {
+            width: 1440px;
+            height: 900px;
+            margin: 40px auto;
+            background: #0f1229;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1f3a 0%, #13172e 100%);
+            border-right: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 32px 24px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-section {
+            margin-bottom: 32px;
+        }
+        
+        .nav-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            padding-left: 12px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #9ca3af;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #ffffff;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            color: #ffffff;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            margin-left: 280px;
+            padding: 32px 40px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .header-left h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-left p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .user-profile {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Search Section */
+        .search-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .search-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .search-subtitle {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+        
+        .search-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e5e7eb;
+        }
+        
+        .form-input {
+            background: rgba(15, 18, 41, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            padding: 14px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+        
+        .filter-chips {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .chip {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chip:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: rgba(99, 102, 241, 0.5);
+        }
+        
+        .chip.active {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-color: transparent;
+        }
+        
+        .search-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #9ca3af;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            border-color: rgba(99, 102, 241, 0.5);
+            color: #ffffff;
+        }
+        
+        /* Results Section */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .results-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .results-count {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        
+        .sort-filter {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .sort-label {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        
+        .sort-select {
+            background: rgba(15, 18, 41, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #ffffff;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        
+        /* Business Cards Grid */
+        .business-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .business-card {
+            background: linear-gradient(135deg, rgba(30, 35, 60, 0.8) 0%, rgba(20, 25, 45, 0.8) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .business-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        .business-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+        
+        .business-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .business-category {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        .watchlist-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .watchlist-btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+        
+        .business-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .stat-item {
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .stat-value.good {
+            color: #10b981;
+        }
+        
+        .stat-value.warning {
+            color: #f59e0b;
+        }
+        
+        .business-location {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 12px;
+        }
+        
+        .business-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: rgba(99, 102, 241, 0.15);
+            color: #a5b4fc;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .analyze-btn {
+            width: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: all 0.2s;
+        }
+        
+        .analyze-btn:hover {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="screen-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">V2</div>
+                <div class="logo-text">V2V</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Main</div>
+                <div class="nav-item">
+                    <div class="nav-icon">📊</div>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item active">
+                    <div class="nav-icon">🔍</div>
+                    <span>Discover Businesses</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⭐</div>
+                    <span>Watchlist</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Analysis</div>
+                <div class="nav-item">
+                    <div class="nav-icon">📈</div>
+                    <span>All Analyses</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">🎯</div>
+                    <span>Opportunities</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚖️</div>
+                    <span>Comparisons</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-label">Account</div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">❓</div>
+                    <span>Help & Support</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-left">
+                    <h1>Discover Businesses</h1>
+                    <p>Find and analyze businesses with strong online reputation</p>
+                </div>
+                <div class="user-profile">AK</div>
+            </div>
+            
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-title">Target Your Search</div>
+                <div class="search-subtitle">Define your criteria to discover investment opportunities</div>
+                
+                <div class="search-form">
+                    <div class="form-group">
+                        <label class="form-label">Location / Suburb</label>
+                        <input type="text" class="form-input" placeholder="e.g., Surry Hills, NSW">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Industry / Business Type</label>
+                        <input type="text" class="form-input" placeholder="e.g., Hospitality, Retail">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">Quick Filters</label>
+                        <div class="filter-chips">
+                            <div class="chip active">High Reputation (8+)</div>
+                            <div class="chip">Medium Reputation (5-8)</div>
+                            <div class="chip">Needs Improvement (<5)</div>
+                            <div class="chip">High Review Volume (1000+)</div>
+                            <div class="chip">Trending Up</div>
+                            <div class="chip">Recent Activity</div>
+                        </div>
+                    </div>
+                    
+                    <div class="search-actions">
+                        <button class="btn-primary">🔍 Search Businesses</button>
+                        <button class="btn-secondary">Reset Filters</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-header">
+                <div>
+                    <div class="results-title">Search Results</div>
+                    <div class="results-count">Found 24 businesses matching your criteria</div>
+                </div>
+                <div class="sort-filter">
+                    <span class="sort-label">Sort by:</span>
+                    <select class="sort-select">
+                        <option>Reputation Score (High to Low)</option>
+                        <option>Review Volume</option>
+                        <option>Recent Activity</option>
+                        <option>Location</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Business Cards Grid -->
+            <div class="business-grid">
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>The Daily Grind Café</h3>
+                            <div class="business-category">Coffee Shop</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value good">8.7</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">1,247</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Surry Hills, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Expansion Ready</div>
+                        <div class="tag">High Growth</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>FitZone Gym</h3>
+                            <div class="business-category">Fitness Center</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value good">9.1</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">2,134</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Bondi Junction, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Franchise Potential</div>
+                        <div class="tag">Strong Brand</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>Sunrise Bakery</h3>
+                            <div class="business-category">Bakery</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value good">8.9</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">1,856</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Bondi Beach, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Consistent Quality</div>
+                        <div class="tag">Local Favorite</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>Bella Vista Trattoria</h3>
+                            <div class="business-category">Italian Restaurant</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value warning">6.4</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">892</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Newtown, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Advisory Opportunity</div>
+                        <div class="tag">Improvement Needed</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>Green Leaf Organic</h3>
+                            <div class="business-category">Health Food Store</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value good">8.5</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">1,423</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Paddington, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Niche Market</div>
+                        <div class="tag">Growing Demand</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+                
+                <div class="business-card">
+                    <div class="business-card-header">
+                        <div class="business-info">
+                            <h3>Tech Repair Hub</h3>
+                            <div class="business-category">Electronics Repair</div>
+                        </div>
+                        <div class="watchlist-btn">⭐</div>
+                    </div>
+                    <div class="business-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">Rep. Score</div>
+                            <div class="stat-value warning">7.2</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Reviews</div>
+                            <div class="stat-value">678</div>
+                        </div>
+                    </div>
+                    <div class="business-location">📍 Sydney CBD, NSW</div>
+                    <div class="business-tags">
+                        <div class="tag">Service Improvement</div>
+                        <div class="tag">Prime Location</div>
+                    </div>
+                    <button class="analyze-btn">Analyze Business →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
